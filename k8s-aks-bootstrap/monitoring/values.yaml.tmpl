@@ -1,0 +1,57 @@
+grafana:
+  adminPassword: ${GRAFANA_ADMIN_PASSWORD}
+  defaultDashboardsEnabled: true
+  service:
+    type: ClusterIP
+  persistence:
+    enabled: true
+    type: sts
+    accessModes:
+      - ReadWriteOnce
+    size: ${GRAFANA_STORAGE_SIZE}
+  grafana.ini:
+    server:
+      root_url: https://${GRAFANA_HOST}
+    security:
+      allow_embedding: true
+
+prometheus:
+  ingress:
+    enabled: false
+  prometheusSpec:
+    retention: 15d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: ${PROMETHEUS_STORAGE_SIZE}
+
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: ${ALERTMANAGER_STORAGE_SIZE}
+
+kubeEtcd:
+  enabled: false
+
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeProxy:
+  enabled: true
+
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true
